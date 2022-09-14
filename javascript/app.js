@@ -24,15 +24,13 @@ function offset(section) {
 }
 
 function isActive(conditional, section) {
-    if (conditional) {
-        section.classList.add('your-active-class');
-        section.style.cssText = "background-color: black;";
+    conditional ? section.style.cssText = "background-color: black;" : section.classList.add('your-active-class');
     };
-}
+
 
 const notActive = (section) => {
     section.classList.remove('your-active-class');
-    section.style.cssText = "background-color: linear-gradient(rgba(102, 107, 112,.1) 0%, rgba(102, 107, 112,.2) 100%)";
+    section.style.cssText = "background-color:()";
 };
 
 //function activation below
@@ -50,16 +48,20 @@ const sectionActivation = () => {
 window.addEventListener('scroll', sectionActivation);
 
 //scroll function below
-const scroll = () => {
+function scroll() {
 
     const links = document.querySelectorAll('.navbar__menu a');
     links.forEach(link => {
-        link.addEventListener('click', () => {
-            for(i = 0 ; i < sections; i++) {
-                sections[i].addEventListener('click', sectionScroll(link));
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            for (let i = 0; i < sections.length; i++) {
+                if (sections[i].id === link.getAttribute("data-nav")) {
+                    sections[i].scrollIntoView({ behavior: "smooth" });
+                }
             }
+
         });
     });
-};
+}
 scroll();
-
