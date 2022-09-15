@@ -4,64 +4,62 @@
 */
 //Defining nav and sections global variables below
 const nav = document.getElementById('navbar__list');
-const sections = document.querySelectorAll('section');
+const sections = [...document.querySelectorAll('section[id]')];
 
-//Building the nav and appending elements below
+//Building the nav and appending elements below instead of using the # method in html
 function createListItem() {
     for (sec of sections) {
         listItem = document.createElement("li");
-        listItem.innerHTML = `<a href="#${sec.id}" data-nav="${sec.id}" class="menu_link">${sec.dataset.nav}</a>`;
+        listItem.innerHTML = `<a data-nav="${sec.id}" class="menu__link">${sec.dataset.nav}</a>`;
         nav.appendChild(listItem);
     }
 }
 createListItem();
 
-// Add class 'active' to section when near top of viewport
-//defining values, adding and removing active class below
-
-function offset(section) {
-    return Math.floor(section.getBoundingClientRect().top);
-}
-
+//defining values, adding navbar highlight, adding and removing active class below
 function isActive(conditional, section) {
-    conditional ? section.style.cssText = "background-color: black;" : section.classList.add('your-active-class');
+    if (conditional) {
+        const nav_link = document.querySelector(`a[data-nav="${section.id}"]`);
+        nav_link.style.cssText = "background-color: aquamarine;";
+        section.classList.add('your-active-class');
+        section.style.cssText = "background-color: black;";
     };
-
-
-const notActive = (section) => {
+}
+function notActive(section) {
+    const nav_link = document.querySelector(`a[data-nav="${section.id}"]`);
+    nav_link.style.cssText = "background-color: white;";
     section.classList.remove('your-active-class');
-    section.style.cssText = "background-color:()";
+    section.style.cssText = "background-color: ()";
 };
 
-//function activation below
-const sectionActivation = () => {
-    sections.forEach(section => {
-        const elementOffset = offset(section);
-
-        inviewport = () => elementOffset < 100 && elementOffset >= -100;
-
-        notActive(section);
-        isActive(inviewport(),section);
-    })
+//section highlight activation below
+function offset(section) {return Math.floor(section.getBoundingClientRect().top);}
+const highlight = () => {
+    for(const sect of sections) {
+        const offsetNumber = offset(sect)
+        const inviewport = () => offsetNumber < 100 && offsetNumber > -100
+        notActive(sect)
+        isActive(inviewport(), sect)
+    }
 }
+window.addEventListener('scroll', highlight);
 
-window.addEventListener('scroll', sectionActivation);
-
-//scroll function below
-function scroll() {
+//scroll & behavior activation below
+const scroll = () => {
 
     const links = document.querySelectorAll('.navbar__menu a');
     links.forEach(link => {
         link.addEventListener('click', (event) => {
-            event.preventDefault();
+            event.preventDefault()
 
             for (let i = 0; i < sections.length; i++) {
                 if (sections[i].id === link.getAttribute("data-nav")) {
-                    sections[i].scrollIntoView({ behavior: "smooth" });
+                    sections[i].scrollIntoView({behavior: "smooth" });
                 }
             }
 
         });
     });
-}
+};
 scroll();
+
